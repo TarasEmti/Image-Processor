@@ -10,6 +10,7 @@
 		76216E801EF4E59C0097F574 /* TMMainScreenControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E7F1EF4E59C0097F574 /* TMMainScreenControllerViewController.m */; };
 		76216E851EF4E8900097F574 /* TMFilterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E841EF4E8900097F574 /* TMFilterButton.m */; };
 		76216E891EF5221E0097F574 /* TMServiceCoreDataRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E881EF5221E0097F574 /* TMServiceCoreDataRequests.m */; };
+		76216E8C1EF525340097F574 /* TMProcessedImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E8B1EF525340097F574 /* TMProcessedImageCell.m */; };
 		7639DD441ED970E70020C19C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD431ED970E70020C19C /* main.m */; };
 		7639DD471ED970E70020C19C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD461ED970E70020C19C /* AppDelegate.m */; };
 		7639DD4D1ED970E70020C19C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7639DD4B1ED970E70020C19C /* Main.storyboard */; };
@@ -25,6 +26,8 @@
 		76216E841EF4E8900097F574 /* TMFilterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMFilterButton.m; sourceTree = "<group>"; };
 		76216E871EF5221E0097F574 /* TMServiceCoreDataRequests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMServiceCoreDataRequests.h; sourceTree = "<group>"; };
 		76216E881EF5221E0097F574 /* TMServiceCoreDataRequests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMServiceCoreDataRequests.m; sourceTree = "<group>"; };
+		76216E8A1EF525340097F574 /* TMProcessedImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMProcessedImageCell.h; sourceTree = "<group>"; };
+		76216E8B1EF525340097F574 /* TMProcessedImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMProcessedImageCell.m; sourceTree = "<group>"; };
 		7639DD3F1ED970E70020C19C /* Image Processor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Image Processor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7639DD431ED970E70020C19C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7639DD451ED970E70020C19C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -50,17 +53,12 @@
 		76216E811EF4E5F50097F574 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
-		76216E821EF4E61F0097F574 /* Custom Button */ = {
-			isa = PBXGroup;
-			children = (
 				76216E831EF4E8900097F574 /* TMFilterButton.h */,
 				76216E841EF4E8900097F574 /* TMFilterButton.m */,
+				76216E8A1EF525340097F574 /* TMProcessedImageCell.h */,
+				76216E8B1EF525340097F574 /* TMProcessedImageCell.m */,
 			);
-			name = "Custom Button";
+			name = Model;
 			sourceTree = "<group>";
 		};
 		76216E861EF521EB0097F574 /* Services */ = {
@@ -94,7 +92,6 @@
 				7639DD451ED970E70020C19C /* AppDelegate.h */,
 				7639DD461ED970E70020C19C /* AppDelegate.m */,
 				76216E861EF521EB0097F574 /* Services */,
-				76216E821EF4E61F0097F574 /* Custom Button */,
 				76216E811EF4E5F50097F574 /* Model */,
 				7639DD5C1ED971D20020C19C /* View Controllers */,
 				7639DD4B1ED970E70020C19C /* Main.storyboard */,
@@ -201,6 +198,7 @@
 				7639DD501ED970E70020C19C /* Image_Processor.xcdatamodeld in Sources */,
 				7639DD441ED970E70020C19C /* main.m in Sources */,
 				76216E851EF4E8900097F574 /* TMFilterButton.m in Sources */,
+				76216E8C1EF525340097F574 /* TMProcessedImageCell.m in Sources */,
 				76216E801EF4E59C0097F574 /* TMMainScreenControllerViewController.m in Sources */,
 				76216E891EF5221E0097F574 /* TMServiceCoreDataRequests.m in Sources */,
 			);
