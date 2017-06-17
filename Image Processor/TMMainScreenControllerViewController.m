@@ -37,10 +37,16 @@
     [self setTitle: @"Image Processor"];
     [self.historyTableView setTableFooterView:[[UIView alloc] init]];
     
+    //Small tableView customization
+    [_historyTableView.layer setBorderWidth: 1.f];
+    [_historyTableView.layer setBorderColor:[UIColor blackColor].CGColor];
+    [_historyTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    [_historyTableView setSeparatorInset:UIEdgeInsetsMake(8, 0, 8, 0)];
+    
     _historyTableView.delegate = self;
     _historyTableView.dataSource = self;
     
-    NSArray *testArray = [[NSArray alloc] initWithObjects:@"12", @"asd", nil];
+    NSArray *testArray = [[NSArray alloc] initWithObjects: @"12", @"asd", nil];
     _processedImages = testArray;
     _cellsState = [[NSMutableDictionary alloc] init];
 }
