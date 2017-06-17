@@ -7,8 +7,10 @@
 //
 
 #import "TMMainScreenControllerViewController.h"
+#import "AppDelegate.h"
 #import "TMFilterButton.h"
 #import "TMProcessedImageCell.h"
+#import "TMDataManager.h"
 
 @interface TMMainScreenControllerViewController ()
 
@@ -24,11 +26,12 @@
 
 @property (strong, nonatomic) NSArray *processedImages;
 @property (strong, nonatomic) NSMutableDictionary *cellsState;
+
 @end
 
 @implementation TMMainScreenControllerViewController
 
-#define kCellLoadingHeight 25.f
+#define kCellLoadingHeight 30.f
 #define kCellLoadedHeight 200.f
 
 - (void)viewDidLoad {
@@ -46,6 +49,7 @@
     _historyTableView.delegate = self;
     _historyTableView.dataSource = self;
     
+    //Do not forget to remove this
     NSArray *testArray = [[NSArray alloc] initWithObjects: @"12", @"asd", nil];
     _processedImages = testArray;
     _cellsState = [[NSMutableDictionary alloc] init];
@@ -63,6 +67,16 @@
     
 }
 
+- (void)createProcessedImage:(UIImage *)image {
+    
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.f);
+    if (imageData.bytes != nil) {
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        TMDataManager *dataManager = appDelegate.dataManager;
+        [dataManager createProcessedImageEntity:imageData];
+    }
+}
+
 - (BOOL)cellIsLoading:(NSIndexPath *)indexPath {
     
     NSNumber *loadingState = [_cellsState objectForKey:indexPath];
@@ -70,13 +84,13 @@
     return loadingState == nil ? NO : [loadingState boolValue];
 }
 
-//MARK: - UITableViewDelegate
+//MARK: -UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _processedImages.count;
 }
 
-//MARK: - UITableViewDataSource
+//MARK: -UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     TMProcessedImageCell* processedImageCell = [tableView dequeueReusableCellWithIdentifier:@"processedImageCell"];
@@ -105,6 +119,13 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"before height %d", [self cellIsLoading:indexPath]);
     return [self cellIsLoading:indexPath] ? kCellLoadingHeight : kCellLoadedHeight;
+}
+
+//MARK: -UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    
+    
 }
 
 @end
