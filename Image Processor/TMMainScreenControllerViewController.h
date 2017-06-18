@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate>
+@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @end

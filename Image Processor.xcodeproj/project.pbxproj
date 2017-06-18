@@ -11,6 +11,7 @@
 		76216E851EF4E8900097F574 /* TMFilterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E841EF4E8900097F574 /* TMFilterButton.m */; };
 		76216E891EF5221E0097F574 /* TMDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E881EF5221E0097F574 /* TMDataManager.m */; };
 		76216E8C1EF525340097F574 /* TMProcessedImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E8B1EF525340097F574 /* TMProcessedImageCell.m */; };
+		76216E8F1EF6E03E0097F574 /* TMServiceFilters.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */; };
 		7639DD441ED970E70020C19C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD431ED970E70020C19C /* main.m */; };
 		7639DD471ED970E70020C19C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD461ED970E70020C19C /* AppDelegate.m */; };
 		7639DD4D1ED970E70020C19C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7639DD4B1ED970E70020C19C /* Main.storyboard */; };
@@ -28,6 +29,8 @@
 		76216E881EF5221E0097F574 /* TMDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMDataManager.m; sourceTree = "<group>"; };
 		76216E8A1EF525340097F574 /* TMProcessedImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMProcessedImageCell.h; sourceTree = "<group>"; };
 		76216E8B1EF525340097F574 /* TMProcessedImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMProcessedImageCell.m; sourceTree = "<group>"; };
+		76216E8D1EF6E03E0097F574 /* TMServiceFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMServiceFilters.h; sourceTree = "<group>"; };
+		76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMServiceFilters.m; sourceTree = "<group>"; };
 		7639DD3F1ED970E70020C19C /* Image Processor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Image Processor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7639DD431ED970E70020C19C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7639DD451ED970E70020C19C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -66,6 +69,8 @@
 			children = (
 				76216E871EF5221E0097F574 /* TMDataManager.h */,
 				76216E881EF5221E0097F574 /* TMDataManager.m */,
+				76216E8D1EF6E03E0097F574 /* TMServiceFilters.h */,
+				76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76216E8F1EF6E03E0097F574 /* TMServiceFilters.m in Sources */,
 				7639DD471ED970E70020C19C /* AppDelegate.m in Sources */,
 				7639DD501ED970E70020C19C /* Image_Processor.xcdatamodeld in Sources */,
 				7639DD441ED970E70020C19C /* main.m in Sources */,

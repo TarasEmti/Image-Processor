@@ -9,6 +9,7 @@
 #import "TMMainScreenControllerViewController.h"
 #import "AppDelegate.h"
 #import "TMFilterButton.h"
+#import "TMServiceFilters.h"
 #import "TMProcessedImageCell.h"
 #import "TMDataManager.h"
 
@@ -26,6 +27,7 @@
 
 @property (strong, nonatomic) NSArray *processedImages;
 @property (strong, nonatomic) NSMutableDictionary *cellsState;
+@property (nonatomic) UIButton *chooseImageButton;
 
 @end
 
@@ -50,20 +52,76 @@
     _historyTableView.dataSource = self;
     
     _cellsState = [[NSMutableDictionary alloc] init];
+    
+    [self updateData];
+    
+    UIImage *loadedImage = [self loadPickedImage];
+    if (loadedImage != nil) {
+        [self.pickedImage setImage:loadedImage];
+        [self activatePickedImageInteraction];
+    } else {
+        self.chooseImageButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [self.chooseImageButton setTitle:@"Choose image" forState:UIControlStateNormal];
+        [self.chooseImageButton addTarget:self action:@selector(callChooseImageAlert:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:self.chooseImageButton];
+    }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewDidLayoutSubviews {
+    self.pickedImageHeight.constant = self.pickedImage.frame.size.width;
+    [self.chooseImageButton setFrame:self.pickedImage.frame];
+}
+
+- (void)activatePickedImageInteraction {
+    [self.pickedImage setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(callChooseImageAlert:)];
+    [self.pickedImage addGestureRecognizer:tapRecognizer];
+}
+
+- (void)callChooseImageAlert:(id)sender {
     
-    //Somehow, this image resize won't work in viewWillAppear, so, whatever.
-    //Adjust picked image frame here, so it will be square form on a view.
-    _pickedImageHeight.constant = _pickedImage.frame.size.width;
+    UIAlertController *chooseimageAlert = [UIAlertController alertControllerWithTitle:@"Choose source"
+                                                                              message:nil
+                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *photoGallery = [UIAlertAction actionWithTitle:@"Photo Gallery"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction* _Nonnull action){
+                                                             [self callImagePickerWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                                                         }];
+    [chooseimageAlert addAction:photoGallery];
+    
+    UIAlertAction *camera = [UIAlertAction actionWithTitle:@"Camera"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction* _Nonnull action){
+                                                       [self callImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
+                                                         }];
+    [chooseimageAlert addAction:camera];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:nil];
+    [chooseimageAlert addAction:cancel];
+    
+    [self presentViewController:chooseimageAlert animated:YES completion:nil];
+}
+
+- (void)callImagePickerWithSourceType:(UIImagePickerControllerSourceType)source {
+    
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    
+    if ([UIImagePickerController isSourceTypeAvailable:source]) {
+        [picker setSourceType:source];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    } else {
+        NSLog(@"Sorry, use real device");
+    }
 }
 
 - (void)updateData {
     
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    TMDataManager *dataManager = appDelegate.dataManager;
+    TMDataManager *dataManager = [self dataManager];
     
     NSArray *freshImagesHistory = [dataManager getAllProcessedImages];
     self.processedImages = freshImagesHistory;
@@ -71,20 +129,45 @@
     [self.historyTableView reloadData];
 }
 
+// MARK: - Filter Buttons
+
 - (IBAction)rotateButtonTouchUp:(id)sender {
     
+}
+
+// MARK: - DataManager operations
+
+- (TMDataManager*)dataManager {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    return (TMDataManager*)appDelegate.dataManager;
 }
 
 - (void)createProcessedImage:(UIImage *)image {
     
     NSData *imageData = UIImageJPEGRepresentation(image, 1.f);
     if (imageData.bytes != nil) {
-        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        TMDataManager *dataManager = appDelegate.dataManager;
+        TMDataManager *dataManager = [self dataManager];
         if ([dataManager createProcessedImageEntity:imageData]) {
             [self updateData];
         }
     }
+}
+
+- (void)savePickedImage:(UIImage *)image {
+    
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.f);
+    if (imageData.bytes != nil) {
+        TMDataManager *dataManager = [self dataManager];
+        [dataManager setCurrentPicture:imageData];
+    }
+}
+
+- (UIImage *)loadPickedImage {
+    
+    TMDataManager *dataManager = [self dataManager];
+    NSData *imageData = [dataManager getCurrentPicture];
+    UIImage *image = [[UIImage alloc] initWithData:imageData];
+    return image;
 }
 
 - (BOOL)cellIsLoading:(NSIndexPath *)indexPath {
@@ -101,6 +184,7 @@
 }
 
 //MARK: -UITableViewDataSource
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     TMProcessedImageCell* processedImageCell = [tableView dequeueReusableCellWithIdentifier:@"processedImageCell"];
@@ -135,7 +219,15 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
+    UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    [self.pickedImage setImage:chosenImage];
+    [self savePickedImage:chosenImage];
     
+    if (!_chooseImageButton.hidden) {
+        [self.chooseImageButton setHidden:YES];
+        [self activatePickedImageInteraction];
+    }
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

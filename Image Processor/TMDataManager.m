@@ -33,8 +33,10 @@
         if (requestError) {
             NSLog(@"%@", [requestError localizedDescription]);
         }
-        NSManagedObject *currentImage = resultArray[0];
-        return [currentImage valueForKey:@"imageData"];
+        if (resultArray.count > 0) {
+            NSManagedObject *currentImage = [resultArray lastObject];
+            return [currentImage valueForKey:@"imageData"];
+        }
     }
     return nil;
 }
