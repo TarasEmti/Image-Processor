@@ -4,10 +4,11 @@
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
     </entity>
     <entity name="TMProcessedImage" representedClassName="TMProcessedImage" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
     </entity>
     <elements>
         <element name="TMPickedImage" positionX="-63" positionY="-18" width="128" height="58"/>
-        <element name="TMProcessedImage" positionX="133" positionY="-15" width="128" height="58"/>
+        <element name="TMProcessedImage" positionX="133" positionY="-15" width="128" height="73"/>
     </elements>
 </model>

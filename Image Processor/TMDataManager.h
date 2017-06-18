@@ -17,9 +17,11 @@
 @property (readonly, strong, nonatomic) NSFetchRequest *fetchRequest;
 @property (readonly, strong) NSPersistentContainer *persistentContainer;
 
+- (NSData *)getCurrentPicture;
+- (BOOL)setCurrentPicture:(NSData *)imageData;
 - (NSPersistentContainer *)persistentContainer;
 - (NSArray *)getAllProcessedImages;
-- (void)createProcessedImageEntity:(NSData *)data;
+- (BOOL)createProcessedImageEntity:(NSData *)imageData;
 - (void)saveContext;
 
 @end

@@ -16,28 +16,97 @@
 @synthesize fetchRequest = _fetchRequest;
 @synthesize persistentContainer = _persistentContainer;
 
-- (NSArray *)getAllProcessedImages {
+- (NSData *)getCurrentPicture {
     
-    return [[NSArray alloc] init];
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    
+    if (context != nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription
+                                       entityForName:@"TMPickedImage"
+                                       inManagedObjectContext:_persistentContainer.viewContext];
+        [fetchRequest setEntity:entity];
+        
+        NSError *requestError = nil;
+        NSArray *resultArray = [context executeFetchRequest:fetchRequest error:&requestError];
+        if (requestError) {
+            NSLog(@"%@", [requestError localizedDescription]);
+        }
+        NSManagedObject *currentImage = resultArray[0];
+        return [currentImage valueForKey:@"imageData"];
+    }
+    return nil;
 }
 
-- (void)createProcessedImageEntity:(NSData *)data {
+- (BOOL)setCurrentPicture:(NSData *)imageData {
     
     //Something to create entity here
-    NSPersistentContainer *container = [self persistentContainer];
-    if (container.viewContext != nil) {
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    if (context != nil) {
         NSManagedObject *image = [NSEntityDescription
-                                  insertNewObjectForEntityForName:@"TMProcessedImage"
-                                  inManagedObjectContext: container.viewContext];
-        [image setValue:data forKey:@"imageData"];
+                                  insertNewObjectForEntityForName:@"TMPickedImage"
+                                  inManagedObjectContext: context];
+        [image setValue:imageData forKey:@"imageData"];
         
         NSError *error = nil;
-        if (![container.viewContext save:&error]) {
+        if (![context save:&error]) {
             NSLog(@"%@", [error localizedDescription]);
+            return NO;
         }
+        return YES;
     }
+    return NO;
 }
 
+- (NSArray *)getAllProcessedImages {
+    
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    
+    if (context != nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription
+                                       entityForName:@"TMProcessedImage"
+                                       inManagedObjectContext:_persistentContainer.viewContext];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]
+                                            initWithKey:@"date"
+                                            ascending:NO];
+        [fetchRequest setSortDescriptors:@[sortDescriptor]];
+        
+        NSError *requestError = nil;
+        NSArray *resultArray = [context executeFetchRequest:fetchRequest error:&requestError];
+        if (requestError) {
+            NSLog(@"%@", [requestError localizedDescription]);
+        }
+        return resultArray;
+    }
+    return nil;
+}
+
+- (BOOL)createProcessedImageEntity:(NSData *)imageData {
+    
+    //Something to create entity here
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    if (context != nil) {
+        NSManagedObject *image = [NSEntityDescription
+                                  insertNewObjectForEntityForName:@"TMProcessedImage"
+                                  inManagedObjectContext: context];
+        [image setValue:imageData forKey:@"imageData"];
+        NSDate *time = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+        [image setValue:time forKey:@"date"];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"%@", [error localizedDescription]);
+            return NO;
+        }
+        return YES;
+    }
+    return NO;
+}
 
 #pragma mark - Core Data stack
 

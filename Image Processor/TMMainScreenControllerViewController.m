@@ -49,9 +49,6 @@
     _historyTableView.delegate = self;
     _historyTableView.dataSource = self;
     
-    //Do not forget to remove this
-    NSArray *testArray = [[NSArray alloc] initWithObjects: @"12", @"asd", nil];
-    _processedImages = testArray;
     _cellsState = [[NSMutableDictionary alloc] init];
 }
 
@@ -59,8 +56,19 @@
     [super viewDidAppear:animated];
     
     //Somehow, this image resize won't work in viewWillAppear, so, whatever.
-    //Adjust picked image frame here, so it will be a square form on a view.
+    //Adjust picked image frame here, so it will be square form on a view.
     _pickedImageHeight.constant = _pickedImage.frame.size.width;
+}
+
+- (void)updateData {
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    TMDataManager *dataManager = appDelegate.dataManager;
+    
+    NSArray *freshImagesHistory = [dataManager getAllProcessedImages];
+    self.processedImages = freshImagesHistory;
+    
+    [self.historyTableView reloadData];
 }
 
 - (IBAction)rotateButtonTouchUp:(id)sender {
@@ -73,7 +81,9 @@
     if (imageData.bytes != nil) {
         AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
         TMDataManager *dataManager = appDelegate.dataManager;
-        [dataManager createProcessedImageEntity:imageData];
+        if ([dataManager createProcessedImageEntity:imageData]) {
+            [self updateData];
+        }
     }
 }
 
