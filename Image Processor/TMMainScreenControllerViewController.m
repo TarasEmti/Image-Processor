@@ -108,10 +108,18 @@
                                                    handler:nil];
     [chooseimageAlert addAction:cancel];
     
+    UIPopoverPresentationController *padActionController = [chooseimageAlert popoverPresentationController];
+    if (padActionController ) {
+        [padActionController setSourceView:self.view];
+        [padActionController setSourceRect:self.pickedImage.frame];
+    }
+    
     [self presentViewController:chooseimageAlert animated:YES completion:nil];
 }
 
 - (void)callProcessedImageOptionsAlert:(id)sender {
+    
+    TMProcessedImageCell *cell = sender;
     
     UIAlertController *chooseActionAlert = [UIAlertController alertControllerWithTitle:@"Choose action"
                                                                                message:nil
@@ -120,7 +128,6 @@
     UIAlertAction *useImage = [UIAlertAction actionWithTitle:@"Use"
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction* _Nonnull action){
-                                                         TMProcessedImageCell *cell = sender;
                                                          self.pickedImage.image = cell.processedImage.image;
                                                          [self savePickedImage];
                                                          
@@ -130,7 +137,6 @@
     UIAlertAction *save = [UIAlertAction actionWithTitle:@"Save"
                                                    style:UIAlertActionStyleDefault
                                                  handler:^(UIAlertAction* _Nonnull action){
-                                                     TMProcessedImageCell *cell = sender;
                                                      UIImage *processedImage = cell.processedImage.image;
                                                      UIImageWriteToSavedPhotosAlbum(processedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
                                                  }];
@@ -147,6 +153,12 @@
                                                      style:UIAlertActionStyleCancel
                                                    handler:nil];
     [chooseActionAlert addAction:cancel];
+    
+    UIPopoverPresentationController *padActionController = [chooseActionAlert popoverPresentationController];
+    if (padActionController) {
+        [padActionController setSourceView:cell.contentView];
+        [padActionController setSourceRect:cell.contentView.frame];
+    }
     
     [self presentViewController:chooseActionAlert animated:YES completion:nil];
 }
@@ -336,7 +348,7 @@
         [self updateData];
         
         [self.historyTableView beginUpdates];
-        [self.historyTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+        [self.historyTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationRight];
         [self updateCellsState];
         [self.historyTableView endUpdates];
     });
