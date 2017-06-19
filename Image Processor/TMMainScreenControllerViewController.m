@@ -230,46 +230,61 @@
 
 - (IBAction)rotateButtonTouchUp:(id)sender {
     
+    NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [self addRowInHistory];
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         
         UIImage *filteredImage = [TMServiceFilters rotateImage:_pickedImage.image byDegrees:kRotateImageDegrees];
-        [self createProcessedImage:filteredImage];
+        [self setProcessedImage:filteredImage forObjectWith:[processedImage valueForKey:@"date"]];
     });
 }
 
 - (IBAction)invertColorsButtonTouchUp:(id)sender {
     
+    NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [self addRowInHistory];
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         
         UIImage *filteredImage = [TMServiceFilters invertColors:_pickedImage.image];
-        [self createProcessedImage:filteredImage];
+        [self setProcessedImage:filteredImage forObjectWith:[processedImage valueForKey:@"date"]];
     });
 }
 
 - (IBAction)horizontalMirrorButtonTouchUp:(id)sender {
     
+    NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [self addRowInHistory];
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         
         UIImage *filteredImage = [TMServiceFilters horizontalMirrorImage:_pickedImage.image];
-        [self createProcessedImage:filteredImage];
+        [self setProcessedImage:filteredImage forObjectWith:[processedImage valueForKey:@"date"]];
     });
 }
 
 - (IBAction)monochromeButtonTouchUp:(id)sender {
     
+    NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [self addRowInHistory];
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         
         UIImage *filteredImage = [TMServiceFilters monochromeImage:_pickedImage.image];
-        [self createProcessedImage:filteredImage];
+        [self setProcessedImage:filteredImage forObjectWith:[processedImage valueForKey:@"date"]];
     });
 }
 
 - (IBAction)mirrorLeftHalfTouchUp:(id)sender {
     
+    NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [self addRowInHistory];
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         
         UIImage *filteredImage = [TMServiceFilters mirrorLeftHalf:_pickedImage.image];
-        [self createProcessedImage:filteredImage];
+        [self setProcessedImage:filteredImage forObjectWith:[processedImage valueForKey:@"date"]];
     });
 }
 
@@ -280,14 +295,15 @@
     return (TMDataManager*)appDelegate.dataManager;
 }
 
-- (void)createProcessedImage:(UIImage *)image {
+- (void)setProcessedImage:(UIImage *)image forObjectWith:(NSDate *)date  {
     
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.f);
-    if (imageData.bytes != nil) {
-        TMDataManager *dataManager = [self dataManager];
-        if ([dataManager createProcessedImageEntity:imageData]) {
-            [self addRowInHistory];
-        }
+    NSManagedObject* processedImage = [[self dataManager] getProceesedImageWithDate:date];
+    
+    if (processedImage) {
+        NSData *data = UIImageJPEGRepresentation(image, 1.f);
+        [processedImage setValue:data forKey:@"imageData"];
+        
+        [[self dataManager] saveContext];
     }
 }
 
@@ -369,8 +385,10 @@
         [processedImageCell showLoadingState];
     }
     NSData *imageData = [self.processedImages[indexPath.row] valueForKey:@"imageData"];
-    UIImage *processedImage = [UIImage imageWithData:imageData];
-    processedImageCell.processedImage.image = processedImage;
+    if (imageData) {
+        UIImage *processedImage = [UIImage imageWithData:imageData];
+        processedImageCell.processedImage.image = processedImage;
+    }
     
     return processedImageCell;
 }

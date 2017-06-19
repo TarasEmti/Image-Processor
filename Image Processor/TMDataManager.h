@@ -24,7 +24,8 @@
 - (BOOL)setCurrentPicture:(NSData *)imageData;
 
 - (NSArray *)getAllProcessedImages;
-- (BOOL)createProcessedImageEntity:(NSData *)imageData;
+- (NSManagedObject *)getProceesedImageWithDate:(NSDate *)date;
+- (NSManagedObject *)createProcessedImageEntity;
 - (BOOL)deleteProcessedImageEntity:(NSManagedObject *)entity;
 
 @end

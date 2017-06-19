@@ -88,26 +88,26 @@
     return nil;
 }
 
-- (BOOL)createProcessedImageEntity:(NSData *)imageData {
+- (NSManagedObject *)createProcessedImageEntity {
     
     //Something to create entity here
     NSManagedObjectContext *context = self.persistentContainer.viewContext;
     if (context != nil) {
-        NSManagedObject *image = [NSEntityDescription
+        NSManagedObject *processedImage = [NSEntityDescription
                                   insertNewObjectForEntityForName:@"TMProcessedImage"
                                   inManagedObjectContext: context];
-        [image setValue:imageData forKey:@"imageData"];
+        [processedImage setValue:nil forKey:@"imageData"];
         NSDate *time = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
-        [image setValue:time forKey:@"date"];
+        [processedImage setValue:time forKey:@"date"];
         
         NSError *error = nil;
         if (![context save:&error]) {
             NSLog(@"%@", [error localizedDescription]);
-            return NO;
+            return nil;
         }
-        return YES;
+        return processedImage;
     }
-    return NO;
+    return nil;
 }
 
 - (BOOL)deleteProcessedImageEntity:(NSManagedObject *)entity {
@@ -124,6 +124,32 @@
         return YES;
     }
     return NO;
+}
+
+- (NSManagedObject *)getProceesedImageWithDate:(NSDate *)date {
+    
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    
+    if (context != nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription
+                                       entityForName:@"TMProcessedImage"
+                                       inManagedObjectContext:_persistentContainer.viewContext];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"date == %@", date];
+        [fetchRequest setPredicate:predicate];
+        
+        NSError *requestError = nil;
+        NSArray *resultArray = [context executeFetchRequest:fetchRequest error:&requestError];
+        if ((requestError) || (resultArray.count != 1)) {
+            NSLog(@"%@", [requestError localizedDescription]);
+        }
+        
+        return [resultArray firstObject];
+    }
+    return nil;
 }
 
 #pragma mark - Core Data stack
