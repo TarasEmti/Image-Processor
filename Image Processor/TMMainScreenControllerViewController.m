@@ -14,6 +14,8 @@
 #import "TMDataManager.h"
 #import "TMURLValidation.h"
 #import "TMDownloadManager.h"
+#import "TMExifDataCollector.h"
+#import "TMExifTableViewController.h"
 
 @interface TMMainScreenControllerViewController ()
 
@@ -31,6 +33,7 @@
 @property (strong, nonatomic) NSMutableDictionary *cellsState;
 @property (nonatomic) UIButton *chooseImageButton;
 @property (strong, nonatomic) UIProgressView *pickedImageDownloadProgress;
+@property (strong, nonatomic) NSURL *pickedImageUrl;
 
 @end
 
@@ -476,8 +479,12 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
+    self.pickedImageUrl = [info objectForKey:UIImagePickerControllerReferenceURL];
     UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    [self.pickedImage setImage:chosenImage];
+    NSLog(@"%ld", (long)[chosenImage imageOrientation]);
+    UIImage *chosenImageUp = [UIImage imageWithCGImage:chosenImage.CGImage scale:1.f orientation:UIImageOrientationUp];
+    NSLog(@"%ld", (long)[chosenImageUp imageOrientation]);
+    [self.pickedImage setImage:chosenImageUp];
     [self savePickedImage];
     
     if (!_chooseImageButton.hidden) {
@@ -485,6 +492,19 @@
         [self activatePickedImageInteraction];
     }
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+//MARK: - Show EXIF data
+
+- (IBAction)exifDataTouchUp:(id)sender {
+    
+    if (self.pickedImageUrl) {
+        NSDictionary *exifDict = [TMExifDataCollector getExifDataFromURL:self.pickedImageUrl];
+        
+        TMExifTableViewController* exifView = [[TMExifTableViewController alloc] initWithExifDict:exifDict];
+        
+        [self showViewController:exifView sender:self];
+    }
 }
 
 //MARK: - Saving image to galery
