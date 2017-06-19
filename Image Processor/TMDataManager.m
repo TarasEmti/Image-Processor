@@ -110,6 +110,22 @@
     return NO;
 }
 
+- (BOOL)deleteProcessedImageEntity:(NSManagedObject *)entity {
+    
+    NSManagedObjectContext *context = self.persistentContainer.viewContext;
+    if (context != nil) {
+        [context deleteObject:entity];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"%@", [error localizedDescription]);
+            return NO;
+        }
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - Core Data stack
 
 - (NSPersistentContainer *)persistentContainer {

@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface TMServiceFilters : NSObject
+
++ (UIImage*) monochromeImage:(UIImage*)image;
++ (UIImage*) rotateImage:(UIImage*)image byDegrees:(int)degrees;
++ (UIImage*) horizontalMirrorImage:(UIImage*)image;
++ (UIImage*) invertColors:(UIImage*)image;
++ (UIImage*) mirrorLeftHalf:(UIImage*)image;
 
 @end

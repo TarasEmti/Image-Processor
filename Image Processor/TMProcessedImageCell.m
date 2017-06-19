@@ -12,7 +12,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
     [_progressBar setHidden:YES];
 }
 

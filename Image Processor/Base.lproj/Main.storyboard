@@ -45,40 +45,48 @@
                                     <constraint firstAttribute="height" constant="171" id="P61-eJ-CcK"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6A-XK-TjG">
-                                <rect key="frame" x="86.5" y="259" width="31" height="30"/>
-                                <state key="normal" title="EXIF"/>
-                            </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ubL-Uk-t3e">
                                 <rect key="frame" x="203.5" y="80" width="155.5" height="171"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZV-8n-6M3" customClass="TMFilterButton">
                                         <rect key="frame" x="0.0" y="0.0" width="155.5" height="28"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Rotate 90"/>
                                         <connections>
                                             <action selector="rotateButtonTouchUp:" destination="HUx-Wo-k3g" eventType="touchUpInside" id="xQF-6Y-oyN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vTl-QZ-2Eb" customClass="TMFilterButton">
                                         <rect key="frame" x="0.0" y="36" width="155.5" height="27.5"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Invert Colors"/>
+                                        <connections>
+                                            <action selector="invertColorsButtonTouchUp:" destination="HUx-Wo-k3g" eventType="touchUpInside" id="mur-4d-pF4"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FhO-KV-MmL" customClass="TMFilterButton">
                                         <rect key="frame" x="0.0" y="71.5" width="155.5" height="28"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Horizontal Mirror"/>
+                                        <connections>
+                                            <action selector="horizontalMirrorButtonTouchUp:" destination="HUx-Wo-k3g" eventType="touchUpInside" id="3Nn-XF-piA"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4X-FL-pya" customClass="TMFilterButton">
                                         <rect key="frame" x="0.0" y="107.5" width="155.5" height="27.5"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Monochrome"/>
+                                        <connections>
+                                            <action selector="monochromeButtonTouchUp:" destination="HUx-Wo-k3g" eventType="touchUpInside" id="s3j-dr-qZh"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tvk-OT-aet" customClass="TMFilterButton">
                                         <rect key="frame" x="0.0" y="143" width="155.5" height="28"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="Mirror Left Half"/>
+                                        <connections>
+                                            <action selector="mirrorLeftHalfTouchUp:" destination="HUx-Wo-k3g" eventType="touchUpInside" id="UyD-ue-P8y"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="200" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Wd0-Ku-i81">
-                                <rect key="frame" x="16" y="297" width="343" height="369.5"/>
+                                <rect key="frame" x="16" y="283" width="343" height="383.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="processedImageCell" id="ubk-cG-FCi" customClass="TMProcessedImageCell">
@@ -88,7 +96,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="343" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hox-ml-pL7">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hox-ml-pL7">
                                                     <rect key="frame" x="87" y="16" width="168" height="167.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="168" id="eV8-j0-UsK"/>
@@ -116,18 +124,26 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6A-XK-TjG">
+                                <rect key="frame" x="87" y="255" width="30" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="ZyG-ai-unk"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="EXIF"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="h6A-XK-TjG" firstAttribute="centerX" secondItem="r4f-uv-WJU" secondAttribute="centerX" id="1Xx-3C-H0W"/>
                             <constraint firstItem="aSJ-rf-NNb" firstAttribute="top" secondItem="Wd0-Ku-i81" secondAttribute="bottom" id="5Ya-12-ard"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ubL-Uk-t3e" secondAttribute="trailing" id="6da-El-c7C"/>
                             <constraint firstItem="r4f-uv-WJU" firstAttribute="leading" secondItem="3v6-kT-GVh" secondAttribute="leadingMargin" id="7NP-oO-nqu"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Wd0-Ku-i81" secondAttribute="trailing" id="Ehw-YZ-OfM"/>
                             <constraint firstItem="ubL-Uk-t3e" firstAttribute="bottom" secondItem="r4f-uv-WJU" secondAttribute="bottom" id="GBO-2T-3aw"/>
                             <constraint firstItem="Wd0-Ku-i81" firstAttribute="leading" secondItem="3v6-kT-GVh" secondAttribute="leadingMargin" id="Lal-O0-xcW"/>
-                            <constraint firstItem="Wd0-Ku-i81" firstAttribute="top" secondItem="h6A-XK-TjG" secondAttribute="bottom" constant="8" id="V31-PS-QYF"/>
-                            <constraint firstItem="h6A-XK-TjG" firstAttribute="top" secondItem="r4f-uv-WJU" secondAttribute="bottom" constant="8" id="WDe-BW-Ads"/>
-                            <constraint firstItem="h6A-XK-TjG" firstAttribute="centerX" secondItem="r4f-uv-WJU" secondAttribute="centerX" id="a73-17-Udp"/>
+                            <constraint firstItem="h6A-XK-TjG" firstAttribute="top" secondItem="r4f-uv-WJU" secondAttribute="bottom" constant="4" id="Xvk-YS-6jn"/>
+                            <constraint firstItem="Wd0-Ku-i81" firstAttribute="top" secondItem="r4f-uv-WJU" secondAttribute="bottom" constant="32" id="aDI-8b-PJW"/>
                             <constraint firstItem="r4f-uv-WJU" firstAttribute="top" secondItem="fas-lW-CaH" secondAttribute="bottom" constant="16" id="b7E-Ym-WnK"/>
                             <constraint firstItem="r4f-uv-WJU" firstAttribute="trailing" secondItem="3v6-kT-GVh" secondAttribute="centerX" id="bEZ-Xs-BVe"/>
                             <constraint firstItem="ubL-Uk-t3e" firstAttribute="leading" secondItem="r4f-uv-WJU" secondAttribute="trailing" constant="16" id="wSa-pe-euo"/>
