@@ -27,7 +27,7 @@
 @property (weak, nonatomic) IBOutlet TMFilterButton *monochromeButton;
 @property (weak, nonatomic) IBOutlet TMFilterButton *mirrorLeftHalfButton;
 
-@property (strong, nonatomic) NSArray *processedImages;
+@property (strong, nonatomic) NSMutableArray *processedImages;
 @property (strong, nonatomic) NSMutableDictionary *cellsState;
 @property (nonatomic) UIButton *chooseImageButton;
 @property (strong, nonatomic) UIProgressView *pickedImageDownloadProgress;
@@ -57,9 +57,7 @@
     
     _cellsState = [[NSMutableDictionary alloc] init];
     
-    TMDataManager *dataManager = [self dataManager];
-    NSArray *freshImagesHistory = [dataManager getAllProcessedImages];
-    self.processedImages = freshImagesHistory;
+    [self updateData];
     
     UIImage *loadedImage = [self loadPickedImage];
     
@@ -69,7 +67,7 @@
     } else {
         self.chooseImageButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [self.chooseImageButton setTitle:@"Choose image" forState:UIControlStateNormal];
-        [self.chooseImageButton setBackgroundColor:[UIColor lightGrayColor]];
+        [self.chooseImageButton setBackgroundColor:[UIColor colorWithWhite:0.95 alpha:1.f]];
         [self.chooseImageButton addTarget:self action:@selector(callChooseImageAlert:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.chooseImageButton];
     }
@@ -231,6 +229,7 @@
 - (IBAction)rotateButtonTouchUp:(id)sender {
     
     NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [_processedImages insertObject:processedImage atIndex:0];
     [self addRowInHistory];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -243,6 +242,7 @@
 - (IBAction)invertColorsButtonTouchUp:(id)sender {
     
     NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [_processedImages insertObject:processedImage atIndex:0];
     [self addRowInHistory];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -255,6 +255,7 @@
 - (IBAction)horizontalMirrorButtonTouchUp:(id)sender {
     
     NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [_processedImages insertObject:processedImage atIndex:0];
     [self addRowInHistory];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -267,6 +268,7 @@
 - (IBAction)monochromeButtonTouchUp:(id)sender {
     
     NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [_processedImages insertObject:processedImage atIndex:0];
     [self addRowInHistory];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -279,6 +281,7 @@
 - (IBAction)mirrorLeftHalfTouchUp:(id)sender {
     
     NSManagedObject *processedImage = [[self dataManager] createProcessedImageEntity];
+    [_processedImages insertObject:processedImage atIndex:0];
     [self addRowInHistory];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
@@ -302,8 +305,6 @@
     if (processedImage) {
         NSData *data = UIImageJPEGRepresentation(image, 1.f);
         [processedImage setValue:data forKey:@"imageData"];
-        
-        [[self dataManager] saveContext];
     }
 }
 
@@ -379,10 +380,11 @@
     
     TMProcessedImageCell* processedImageCell = [tableView dequeueReusableCellWithIdentifier:@"processedImageCell"];
     processedImageCell.delegate = self;
-    if (![self cellIsLoading:indexPath]) {
-        [processedImageCell hideLoadingState];
-    } else {
+    
+    if ([self cellIsLoading:indexPath]) {
         [processedImageCell showLoadingState];
+    } else {
+        [processedImageCell hideLoadingState];
     }
     NSData *imageData = [self.processedImages[indexPath.row] valueForKey:@"imageData"];
     if (imageData) {
@@ -413,10 +415,6 @@
 //MARK: - History Table view changes
 
 - (void)addRowInHistory {
-    
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        
-        [self updateData];
         
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         
@@ -429,7 +427,6 @@
         [newCell startTimer];
         [self updateCellsState];
         [self.historyTableView endUpdates];
-    });
 }
 
 - (void)deleteRowInHistory:(NSIndexPath *)index {
@@ -445,11 +442,12 @@
     });
 }
 
+// Most time expensive method
 - (void)updateData {
     
     TMDataManager *dataManager = [self dataManager];
     NSArray *freshImagesHistory = [dataManager getAllProcessedImages];
-    self.processedImages = freshImagesHistory;
+    self.processedImages = [NSMutableArray arrayWithArray:freshImagesHistory];
 }
 
 - (void)updateCellsState {
@@ -462,12 +460,16 @@
     }
 }
 
-- (void)filterImplementationDone {
+- (void)filterImplementationDoneInCell:(UITableViewCell *)cell {
+    
+    [[self dataManager] saveContext];
     
     [self updateCellsState];
     
     [self.historyTableView beginUpdates];
     [self.historyTableView endUpdates];
+    
+    [self.historyTableView reloadData];
 }
 
 //MARK: - UIImagePickerControllerDelegate

@@ -10,6 +10,6 @@
 
 @protocol TMProcessedImageCellDelegate <NSObject>
 
-- (void)filterImplementationDone;
+- (void)filterImplementationDoneInCell:(UITableViewCell *)cell;
 
 @end

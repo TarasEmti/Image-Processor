@@ -62,7 +62,7 @@
     
     _isLoading = NO;
     [self hideLoadingState];
-    [delegate filterImplementationDone];
+    [delegate filterImplementationDoneInCell:self];
 }
 
 - (void)hideLoadingState {

@@ -100,11 +100,6 @@
         NSDate *time = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
         [processedImage setValue:time forKey:@"date"];
         
-        NSError *error = nil;
-        if (![context save:&error]) {
-            NSLog(@"%@", [error localizedDescription]);
-            return nil;
-        }
         return processedImage;
     }
     return nil;
