@@ -12,6 +12,8 @@
 #import "TMServiceFilters.h"
 #import "TMProcessedImageCell.h"
 #import "TMDataManager.h"
+#import "TMURLValidation.h"
+#import "TMDownloadManager.h"
 
 @interface TMMainScreenControllerViewController ()
 
@@ -28,6 +30,7 @@
 @property (strong, nonatomic) NSArray *processedImages;
 @property (strong, nonatomic) NSMutableDictionary *cellsState;
 @property (nonatomic) UIButton *chooseImageButton;
+@property (strong, nonatomic) UIProgressView *pickedImageDownloadProgress;
 
 @end
 
@@ -70,11 +73,19 @@
         [self.chooseImageButton addTarget:self action:@selector(callChooseImageAlert:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.chooseImageButton];
     }
+    _pickedImageDownloadProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    [self.view addSubview:_pickedImageDownloadProgress];
 }
 
 - (void)viewDidLayoutSubviews {
     self.pickedImageHeight.constant = self.pickedImage.frame.size.width;
     [self.chooseImageButton setFrame:self.pickedImage.frame];
+    
+    [_pickedImageDownloadProgress setFrame:CGRectMake(CGRectGetMinX(_pickedImage.frame),
+                                                      CGRectGetMaxY(_pickedImage.frame),
+                                                      _pickedImage.frame.size.width,
+                                                      3)];
+    [_pickedImageDownloadProgress setHidden:YES];
 }
 
 - (void)activatePickedImageInteraction {
@@ -102,6 +113,13 @@
                                                        [self callImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
                                                    }];
     [chooseimageAlert addAction:camera];
+    
+    UIAlertAction *urlDownload = [UIAlertAction actionWithTitle:@"Download (URL)"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction* _Nonnull action){
+                                                       [self callAlertWithURLTextField];
+                                                   }];
+    [chooseimageAlert addAction:urlDownload];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                      style:UIAlertActionStyleCancel
@@ -174,6 +192,38 @@
     } else {
         NSLog(@"Sorry, use real device");
     }
+}
+
+- (void)callAlertWithURLTextField {
+    
+    UIAlertController* urlAlert = [UIAlertController alertControllerWithTitle:@"Dowload From" message:@"Enter URL" preferredStyle:UIAlertControllerStyleAlert];
+    
+    [urlAlert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"http://somedomain.com/picture.jpg";
+        [textField setReturnKeyType:UIReturnKeyGo];
+    }];
+    
+    UIAlertAction* startDownload = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        UITextField *urlEnter = urlAlert.textFields[0];
+        NSString *urlText = [NSString stringWithString:urlEnter.text];
+        NSURL *url = [NSURL URLWithString:urlText];
+        
+        if ((url != nil) && ([TMURLValidation isValidImageURL:url])) {
+            [self downloadImageFromURL:url];
+        } else {
+            [self showStatusWithMessage:@"Wrong URL"];
+        }
+        [urlAlert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    [urlAlert addAction:startDownload];
+    
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Отмена" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        //[self resignFirstResponder];
+    }];
+    [urlAlert addAction:cancel];
+    
+    [self presentViewController:urlAlert animated:YES completion:nil];
 }
 
 //MARK: - Filter Buttons
@@ -276,6 +326,29 @@
 - (BOOL)cellIsLoading:(NSIndexPath *)indexPath {
     NSNumber *loadingState = [_cellsState objectForKey:indexPath];
     return loadingState == nil ? NO : [loadingState boolValue];
+}
+
+//MARK: - Download Operations
+
+- (void)downloadImageFromURL:(NSURL *)url {
+    TMDownloadManager *manager = [[TMDownloadManager alloc] init];
+    manager.delegate = self;
+    
+    [manager downloadImageFromURL:url];
+    
+    [_pickedImageDownloadProgress setProgress:0.f];
+    [_pickedImageDownloadProgress setHidden:NO];
+}
+
+- (void)imageDidLoad:(UIImage*)image fromURL:(NSURL*)url {
+    
+    [_pickedImageDownloadProgress setHidden:YES];
+    [self.pickedImage setImage:image];
+    [self savePickedImage];
+}
+
+- (void)progressChanged:(float)progress {
+    [_pickedImageDownloadProgress setProgress:progress];
 }
 
 //MARK: - UITableViewDelegate
@@ -398,12 +471,17 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     
+    [self showStatusWithMessage:@"Saved"];
+}
+
+- (void)showStatusWithMessage:(NSString *)message {
+    
     UILabel* okWidndow = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2 - 50, self.view.frame.size.height/2 - 50, 100, 100)];
     
     okWidndow.layer.cornerRadius = 10;
     okWidndow.layer.masksToBounds = YES;
     
-    okWidndow.text = @"Saved";
+    okWidndow.text = message;
     okWidndow.textAlignment = NSTextAlignmentCenter;
     okWidndow.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1];
     [[self view] addSubview:okWidndow];

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TMProcessedImageCellDelegate.h"
+#import "TMDownloadManagerDelegate.h"
 
-@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, TMProcessedImageCellDelegate>
+@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, TMProcessedImageCellDelegate, TMDownloadManagerDelegate>
 
 @end

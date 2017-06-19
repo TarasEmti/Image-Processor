@@ -12,6 +12,8 @@
 		76216E891EF5221E0097F574 /* TMDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E881EF5221E0097F574 /* TMDataManager.m */; };
 		76216E8C1EF525340097F574 /* TMProcessedImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E8B1EF525340097F574 /* TMProcessedImageCell.m */; };
 		76216E8F1EF6E03E0097F574 /* TMServiceFilters.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */; };
+		76216E931EF7DD470097F574 /* TMDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E921EF7DD470097F574 /* TMDownloadManager.m */; };
+		76216E971EF7FDF70097F574 /* TMURLValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 76216E961EF7FDF70097F574 /* TMURLValidation.m */; };
 		7639DD441ED970E70020C19C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD431ED970E70020C19C /* main.m */; };
 		7639DD471ED970E70020C19C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7639DD461ED970E70020C19C /* AppDelegate.m */; };
 		7639DD4D1ED970E70020C19C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7639DD4B1ED970E70020C19C /* Main.storyboard */; };
@@ -32,6 +34,11 @@
 		76216E8D1EF6E03E0097F574 /* TMServiceFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMServiceFilters.h; sourceTree = "<group>"; };
 		76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMServiceFilters.m; sourceTree = "<group>"; };
 		76216E901EF7B7800097F574 /* TMProcessedImageCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMProcessedImageCellDelegate.h; sourceTree = "<group>"; };
+		76216E911EF7DD470097F574 /* TMDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMDownloadManager.h; sourceTree = "<group>"; };
+		76216E921EF7DD470097F574 /* TMDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMDownloadManager.m; sourceTree = "<group>"; };
+		76216E941EF7DDA90097F574 /* TMDownloadManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMDownloadManagerDelegate.h; sourceTree = "<group>"; };
+		76216E951EF7FDF70097F574 /* TMURLValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMURLValidation.h; sourceTree = "<group>"; };
+		76216E961EF7FDF70097F574 /* TMURLValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMURLValidation.m; sourceTree = "<group>"; };
 		7639DD3F1ED970E70020C19C /* Image Processor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Image Processor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7639DD431ED970E70020C19C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7639DD451ED970E70020C19C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -69,10 +76,15 @@
 		76216E861EF521EB0097F574 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				76216E951EF7FDF70097F574 /* TMURLValidation.h */,
+				76216E961EF7FDF70097F574 /* TMURLValidation.m */,
 				76216E871EF5221E0097F574 /* TMDataManager.h */,
 				76216E881EF5221E0097F574 /* TMDataManager.m */,
 				76216E8D1EF6E03E0097F574 /* TMServiceFilters.h */,
 				76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */,
+				76216E911EF7DD470097F574 /* TMDownloadManager.h */,
+				76216E921EF7DD470097F574 /* TMDownloadManager.m */,
+				76216E941EF7DDA90097F574 /* TMDownloadManagerDelegate.h */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -202,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76216E8F1EF6E03E0097F574 /* TMServiceFilters.m in Sources */,
+				76216E971EF7FDF70097F574 /* TMURLValidation.m in Sources */,
 				7639DD471ED970E70020C19C /* AppDelegate.m in Sources */,
 				7639DD501ED970E70020C19C /* Image_Processor.xcdatamodeld in Sources */,
 				7639DD441ED970E70020C19C /* main.m in Sources */,
@@ -209,6 +222,7 @@
 				76216E8C1EF525340097F574 /* TMProcessedImageCell.m in Sources */,
 				76216E801EF4E59C0097F574 /* TMMainScreenControllerViewController.m in Sources */,
 				76216E891EF5221E0097F574 /* TMDataManager.m in Sources */,
+				76216E931EF7DD470097F574 /* TMDownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
