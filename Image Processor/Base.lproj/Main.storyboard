@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -93,7 +92,7 @@
                                         <rect key="frame" x="0.0" y="28" width="343" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ubk-cG-FCi" id="Tb1-rR-s7n">
-                                            <rect key="frame" x="0.0" y="0.0" width="343" height="200"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="199.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hox-ml-pL7">
@@ -113,8 +112,7 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="0kV-RX-Jjy" secondAttribute="trailing" id="bjg-Rj-40l"/>
                                                 <constraint firstItem="0kV-RX-Jjy" firstAttribute="leading" secondItem="Tb1-rR-s7n" secondAttribute="leadingMargin" id="dKI-4h-acZ"/>
                                                 <constraint firstItem="0kV-RX-Jjy" firstAttribute="centerX" secondItem="Tb1-rR-s7n" secondAttribute="centerX" id="gZw-mk-7cC"/>
-                                                <constraint firstItem="hox-ml-pL7" firstAttribute="top" secondItem="Tb1-rR-s7n" secondAttribute="topMargin" constant="8" id="r4l-jW-hxO"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="hox-ml-pL7" secondAttribute="bottom" constant="8" id="tHo-Vy-vLt"/>
+                                                <constraint firstItem="hox-ml-pL7" firstAttribute="centerY" secondItem="Tb1-rR-s7n" secondAttribute="centerY" id="nor-Wi-O8Q"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

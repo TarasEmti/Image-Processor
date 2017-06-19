@@ -7,10 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMProcessedImageCellDelegate.h"
+
+@protocol TMProcessedImageCellDelegate;
 
 @interface TMProcessedImageCell : UITableViewCell
 
+@property (assign, nonatomic) id delegate;
+
 @property (weak, nonatomic) IBOutlet UIImageView *processedImage;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
+@property (assign) BOOL isLoading;
+
+- (void)showLoadingState;
+- (void)hideLoadingState;
+- (void)startTimer;
 
 @end

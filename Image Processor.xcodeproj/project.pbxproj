@@ -31,6 +31,7 @@
 		76216E8B1EF525340097F574 /* TMProcessedImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMProcessedImageCell.m; sourceTree = "<group>"; };
 		76216E8D1EF6E03E0097F574 /* TMServiceFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMServiceFilters.h; sourceTree = "<group>"; };
 		76216E8E1EF6E03E0097F574 /* TMServiceFilters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMServiceFilters.m; sourceTree = "<group>"; };
+		76216E901EF7B7800097F574 /* TMProcessedImageCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMProcessedImageCellDelegate.h; sourceTree = "<group>"; };
 		7639DD3F1ED970E70020C19C /* Image Processor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Image Processor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7639DD431ED970E70020C19C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7639DD451ED970E70020C19C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -58,6 +59,7 @@
 			children = (
 				76216E831EF4E8900097F574 /* TMFilterButton.h */,
 				76216E841EF4E8900097F574 /* TMFilterButton.m */,
+				76216E901EF7B7800097F574 /* TMProcessedImageCellDelegate.h */,
 				76216E8A1EF525340097F574 /* TMProcessedImageCell.h */,
 				76216E8B1EF525340097F574 /* TMProcessedImageCell.m */,
 			);

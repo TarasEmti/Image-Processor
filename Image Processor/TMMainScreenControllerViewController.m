@@ -100,7 +100,7 @@
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction* _Nonnull action){
                                                        [self callImagePickerWithSourceType:UIImagePickerControllerSourceTypeCamera];
-                                                         }];
+                                                   }];
     [chooseimageAlert addAction:camera];
     
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
@@ -114,26 +114,26 @@
 - (void)callProcessedImageOptionsAlert:(id)sender {
     
     UIAlertController *chooseActionAlert = [UIAlertController alertControllerWithTitle:@"Choose action"
-                                                                              message:nil
-                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
+                                                                               message:nil
+                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
     
     UIAlertAction *useImage = [UIAlertAction actionWithTitle:@"Use"
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction* _Nonnull action){
-                                                             TMProcessedImageCell *cell = sender;
-                                                             self.pickedImage.image = cell.processedImage.image;
-                                                             [self savePickedImage];
-                                                             
-                                                         }];
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction* _Nonnull action){
+                                                         TMProcessedImageCell *cell = sender;
+                                                         self.pickedImage.image = cell.processedImage.image;
+                                                         [self savePickedImage];
+                                                         
+                                                     }];
     [chooseActionAlert addAction:useImage];
     
     UIAlertAction *save = [UIAlertAction actionWithTitle:@"Save"
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction* _Nonnull action){
-                                                       TMProcessedImageCell *cell = sender;
-                                                       UIImage *processedImage = cell.processedImage.image;
-                                                       UIImageWriteToSavedPhotosAlbum(processedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
-                                                   }];
+                                                   style:UIAlertActionStyleDefault
+                                                 handler:^(UIAlertAction* _Nonnull action){
+                                                     TMProcessedImageCell *cell = sender;
+                                                     UIImage *processedImage = cell.processedImage.image;
+                                                     UIImageWriteToSavedPhotosAlbum(processedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+                                                 }];
     [chooseActionAlert addAction:save];
     
     UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete"
@@ -167,28 +167,48 @@
 //MARK: - Filter Buttons
 
 - (IBAction)rotateButtonTouchUp:(id)sender {
-    UIImage *filteredImage = [TMServiceFilters rotateImage:_pickedImage.image byDegrees:kRotateImageDegrees];
-    [self createProcessedImage:filteredImage];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        
+        UIImage *filteredImage = [TMServiceFilters rotateImage:_pickedImage.image byDegrees:kRotateImageDegrees];
+        [self createProcessedImage:filteredImage];
+    });
 }
 
 - (IBAction)invertColorsButtonTouchUp:(id)sender {
-    UIImage *filteredImage = [TMServiceFilters invertColors:_pickedImage.image];
-    [self createProcessedImage:filteredImage];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        
+        UIImage *filteredImage = [TMServiceFilters invertColors:_pickedImage.image];
+        [self createProcessedImage:filteredImage];
+    });
 }
 
 - (IBAction)horizontalMirrorButtonTouchUp:(id)sender {
-    UIImage *filteredImage = [TMServiceFilters horizontalMirrorImage:_pickedImage.image];
-    [self createProcessedImage:filteredImage];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        
+        UIImage *filteredImage = [TMServiceFilters horizontalMirrorImage:_pickedImage.image];
+        [self createProcessedImage:filteredImage];
+    });
 }
 
 - (IBAction)monochromeButtonTouchUp:(id)sender {
-    UIImage *filteredImage = [TMServiceFilters monochromeImage:_pickedImage.image];
-    [self createProcessedImage:filteredImage];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        
+        UIImage *filteredImage = [TMServiceFilters monochromeImage:_pickedImage.image];
+        [self createProcessedImage:filteredImage];
+    });
 }
 
 - (IBAction)mirrorLeftHalfTouchUp:(id)sender {
-    UIImage *filteredImage = [TMServiceFilters mirrorLeftHalf:_pickedImage.image];
-    [self createProcessedImage:filteredImage];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        
+        UIImage *filteredImage = [TMServiceFilters mirrorLeftHalf:_pickedImage.image];
+        [self createProcessedImage:filteredImage];
+    });
 }
 
 //MARK: - DataManager operations
@@ -257,6 +277,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     TMProcessedImageCell* processedImageCell = [tableView dequeueReusableCellWithIdentifier:@"processedImageCell"];
+    processedImageCell.delegate = self;
+    if (![self cellIsLoading:indexPath]) {
+        [processedImageCell hideLoadingState];
+    } else {
+        [processedImageCell showLoadingState];
+    }
     NSData *imageData = [self.processedImages[indexPath.row] valueForKey:@"imageData"];
     UIImage *processedImage = [UIImage imageWithData:imageData];
     processedImageCell.processedImage.image = processedImage;
@@ -268,10 +294,11 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if ([self cellIsLoading:indexPath]) {
+    TMProcessedImageCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    if (selectedCell.isLoading) {
         return;
     } else {
-        TMProcessedImageCell* selectedCell = [tableView cellForRowAtIndexPath:indexPath];
         [self callProcessedImageOptionsAlert:selectedCell];
     }
 }
@@ -284,22 +311,35 @@
 
 - (void)addRowInHistory {
     
-    [self updateData];
-    
-    NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-    
-    [self.historyTableView beginUpdates];
-    [self.historyTableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
-    [self.historyTableView endUpdates];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        
+        [self updateData];
+        
+        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+        
+        [self.historyTableView beginUpdates];
+        [self.historyTableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
+        [self.historyTableView endUpdates];
+        
+        [self.historyTableView beginUpdates];
+        TMProcessedImageCell *newCell = [_historyTableView cellForRowAtIndexPath:index];
+        [newCell startTimer];
+        [self updateCellsState];
+        [self.historyTableView endUpdates];
+    });
 }
 
 - (void)deleteRowInHistory:(NSIndexPath *)index {
     
-    [self updateData];
-    
-    [self.historyTableView beginUpdates];
-    [self.historyTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationLeft];
-    [self.historyTableView endUpdates];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        
+        [self updateData];
+        
+        [self.historyTableView beginUpdates];
+        [self.historyTableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+        [self updateCellsState];
+        [self.historyTableView endUpdates];
+    });
 }
 
 - (void)updateData {
@@ -307,6 +347,24 @@
     TMDataManager *dataManager = [self dataManager];
     NSArray *freshImagesHistory = [dataManager getAllProcessedImages];
     self.processedImages = freshImagesHistory;
+}
+
+- (void)updateCellsState {
+    
+    for (int i= 0; i < _processedImages.count; i++) {
+        NSIndexPath *index = [NSIndexPath indexPathForRow:i inSection:0];
+        TMProcessedImageCell *cell = [_historyTableView cellForRowAtIndexPath:index];
+        NSNumber *state = [NSNumber numberWithBool:cell.isLoading];
+        [_cellsState setObject:state forKey:index];
+    }
+}
+
+- (void)filterImplementationDone {
+    
+    [self updateCellsState];
+    
+    [self.historyTableView beginUpdates];
+    [self.historyTableView endUpdates];
 }
 
 //MARK: - UIImagePickerControllerDelegate
@@ -333,7 +391,7 @@
     okWidndow.layer.cornerRadius = 10;
     okWidndow.layer.masksToBounds = YES;
     
-    okWidndow.text = @"OK";
+    okWidndow.text = @"Saved";
     okWidndow.textAlignment = NSTextAlignmentCenter;
     okWidndow.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1];
     [[self view] addSubview:okWidndow];
