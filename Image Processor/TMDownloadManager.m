@@ -63,7 +63,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     if (image) {
         dispatch_async(dispatch_get_main_queue(), ^(void){
             
-            [delegate imageDidLoad:image fromURL:_url];
+            [delegate imageDidLoad:image toURL:destinationUrl];
         });
     }
 }

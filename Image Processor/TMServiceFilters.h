@@ -11,6 +11,8 @@
 
 @interface TMServiceFilters : NSObject
 
++ (UIImage *)fixImageOrientation:(UIImage *)image;
+
 + (UIImage*) monochromeImage:(UIImage*)image;
 + (UIImage*) rotateImage:(UIImage*)image byDegrees:(int)degrees;
 + (UIImage*) horizontalMirrorImage:(UIImage*)image;

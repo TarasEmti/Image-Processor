@@ -14,8 +14,7 @@
 
 @property (assign, nonatomic) id delegate;
 
-//+ (void)modifyEXIFdata:(NSDictionary*)exifData;
-+ (NSDictionary*)getExifDataFromURL:(NSURL*)fileURL;
+- (void)getExifDataFromURL:(NSURL*)fileURL;
 
 @end
 

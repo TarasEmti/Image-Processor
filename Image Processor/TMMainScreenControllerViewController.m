@@ -148,6 +148,7 @@
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction* _Nonnull action){
                                                          self.pickedImage.image = cell.processedImage.image;
+                                                         self.pickedImageUrl = nil;
                                                          [self savePickedImage];
                                                          
                                                      }];
@@ -329,14 +330,20 @@
     NSData *imageData = UIImageJPEGRepresentation(self.pickedImage.image, 1.f);
     if (imageData.bytes != nil) {
         TMDataManager *dataManager = [self dataManager];
-        [dataManager setCurrentPicture:imageData];
+        [dataManager saveCurrentPicture:imageData withUrl:self.pickedImageUrl];
     }
 }
 
 - (UIImage *)loadPickedImage {
     
     TMDataManager *dataManager = [self dataManager];
-    NSData *imageData = [dataManager getCurrentPicture];
+    NSManagedObject *pickedImage = [dataManager getCurrentPicture];
+    
+    NSString *assetUrlString = [pickedImage valueForKey:@"imageUrl"];
+    NSURL *assetUrl = [NSURL URLWithString:assetUrlString];
+    self.pickedImageUrl = assetUrl;
+    
+    NSData *imageData = [pickedImage valueForKey:@"imageData"];
     UIImage *image = [[UIImage alloc] initWithData:imageData];
     return image;
 }
@@ -360,10 +367,11 @@
     [_pickedImageDownloadProgress setHidden:NO];
 }
 
-- (void)imageDidLoad:(UIImage*)image fromURL:(NSURL*)url {
+- (void)imageDidLoad:(UIImage*)image toURL:(NSURL*)url {
     
     [_pickedImageDownloadProgress setHidden:YES];
     [self.pickedImage setImage:image];
+    self.pickedImageUrl = url;
     [self savePickedImage];
 }
 
@@ -479,12 +487,10 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
-    self.pickedImageUrl = [info objectForKey:UIImagePickerControllerReferenceURL];
     UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    NSLog(@"%ld", (long)[chosenImage imageOrientation]);
-    UIImage *chosenImageUp = [UIImage imageWithCGImage:chosenImage.CGImage scale:1.f orientation:UIImageOrientationUp];
-    NSLog(@"%ld", (long)[chosenImageUp imageOrientation]);
-    [self.pickedImage setImage:chosenImageUp];
+    [self.pickedImage setImage:chosenImage];
+    self.pickedImageUrl = [info objectForKey:UIImagePickerControllerReferenceURL];
+    
     [self savePickedImage];
     
     if (!_chooseImageButton.hidden) {
@@ -499,18 +505,21 @@
 - (IBAction)exifDataTouchUp:(id)sender {
     
     if (self.pickedImageUrl) {
-        NSDictionary *exifDict = [TMExifDataCollector getExifDataFromURL:self.pickedImageUrl];
         
-        TMExifTableViewController* exifView = [[TMExifTableViewController alloc] initWithExifDict:exifDict];
-        
-        [self showViewController:exifView sender:self];
+        TMExifDataCollector *collector = [[TMExifDataCollector alloc] init];
+        collector.delegate = self;
+        [collector getExifDataFromURL:self.pickedImageUrl];
     }
+}
+
+- (void)dataCollected:(NSDictionary*)exifData {
+    TMExifTableViewController* exifView = [[TMExifTableViewController alloc] initWithExifDict:exifData];
+    [self showViewController:exifView sender:self];
 }
 
 //MARK: - Saving image to galery
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    
     [self showStatusWithMessage:@"Saved"];
 }
 

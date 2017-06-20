@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "TMProcessedImageCellDelegate.h"
 #import "TMDownloadManagerDelegate.h"
+#import "TMExifDataCollector.h"
 
-@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, TMProcessedImageCellDelegate, TMDownloadManagerDelegate>
+@interface TMMainScreenControllerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, TMProcessedImageCellDelegate, TMDownloadManagerDelegate, TMExifInfoDelegate>
 
 @end

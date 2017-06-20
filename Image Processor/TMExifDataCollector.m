@@ -9,25 +9,28 @@
 #import "TMExifDataCollector.h"
 #import <UIKit/UIKit.h>
 #import <ImageIO/ImageIO.h>
-#import <AssetsLibrary/ALAsset.h>
-#import <AssetsLibrary/ALAssetRepresentation.h>
+#import <Photos/Photos.h>
 
 @implementation TMExifDataCollector
 
 @synthesize delegate;
 
-+ (NSDictionary*)getExifDataFromURL:(NSURL *)fileURL {
+- (void)getExifDataFromURL:(NSURL *)fileURL {
     
-    CGImageSourceRef mySourceRef = CGImageSourceCreateWithURL((CFURLRef)fileURL, NULL);
-    NSDictionary *myMetadata = (NSDictionary *) CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(mySourceRef,0,NULL));
-    NSDictionary *exifDict = [myMetadata objectForKey:(NSString *)kCGImagePropertyExifDictionary];
+    PHFetchResult *assets = [PHAsset fetchAssetsWithALAssetURLs:@[fileURL] options:nil];
+    PHAsset *asset = [assets firstObject];
     
-    return exifDict;
+    PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
+    
+    
+    
+    [asset requestContentEditingInputWithOptions:options completionHandler:^(PHContentEditingInput *contentEditingInput, NSDictionary *info) {
+        
+        CIImage *fullImage = [CIImage imageWithContentsOfURL:contentEditingInput.fullSizeImageURL];
+        NSDictionary *properties = fullImage.properties;
+        NSDictionary *exifData = [properties valueForKey:@"{Exif}"];
+        [delegate dataCollected:exifData];
+    }];
 }
-/*
- + (void)modifyEXIFdata:(NSDictionary*)exifData {
- 
- 
- }
- */
+
 @end

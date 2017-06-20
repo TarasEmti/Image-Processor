@@ -16,7 +16,7 @@
 @synthesize fetchRequest = _fetchRequest;
 @synthesize persistentContainer = _persistentContainer;
 
-- (NSData *)getCurrentPicture {
+- (NSManagedObject *)getCurrentPicture {
     
     NSManagedObjectContext *context = self.persistentContainer.viewContext;
     
@@ -35,21 +35,23 @@
         }
         if (resultArray.count > 0) {
             NSManagedObject *currentImage = [resultArray lastObject];
-            return [currentImage valueForKey:@"imageData"];
+            return currentImage;
         }
     }
     return nil;
 }
 
-- (BOOL)setCurrentPicture:(NSData *)imageData {
+- (BOOL)saveCurrentPicture:(NSData *)imageData withUrl:(NSURL *)url {
     
-    //Something to create entity here
     NSManagedObjectContext *context = self.persistentContainer.viewContext;
     if (context != nil) {
         NSManagedObject *image = [NSEntityDescription
                                   insertNewObjectForEntityForName:@"TMPickedImage"
                                   inManagedObjectContext: context];
         [image setValue:imageData forKey:@"imageData"];
+        
+        NSString *urlString = [url absoluteString];
+        [image setValue:urlString forKey:@"imageUrl"];
         
         NSError *error = nil;
         if (![context save:&error]) {

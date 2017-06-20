@@ -10,7 +10,7 @@
 
 @protocol TMDownloadManagerDelegate <NSObject>
 
-- (void)imageDidLoad:(UIImage*)image fromURL:(NSURL*)url;
+- (void)imageDidLoad:(UIImage*)image toURL:(NSURL*)url;
 - (void)progressChanged:(float)progress;
 
 @end

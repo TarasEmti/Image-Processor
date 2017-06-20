@@ -20,8 +20,8 @@
 - (NSPersistentContainer *)persistentContainer;
 - (void)saveContext;
 
-- (NSData *)getCurrentPicture;
-- (BOOL)setCurrentPicture:(NSData *)imageData;
+- (NSManagedObject *)getCurrentPicture;
+- (BOOL)saveCurrentPicture:(NSData *)imageData withUrl:(NSURL *)url;
 
 - (NSArray *)getAllProcessedImages;
 - (NSManagedObject *)getProceesedImageWithDate:(NSDate *)date;
