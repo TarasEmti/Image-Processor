@@ -488,7 +488,9 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
     UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    [self.pickedImage setImage:chosenImage];
+    UIImage *filteredImage = [TMServiceFilters fixImageOrientation:chosenImage];
+    
+    [self.pickedImage setImage:filteredImage];
     self.pickedImageUrl = [info objectForKey:UIImagePickerControllerReferenceURL];
     
     [self savePickedImage];
